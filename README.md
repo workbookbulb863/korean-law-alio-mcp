@@ -380,8 +380,6 @@ korean-law-alio                                             # REPL (대화형)
 
 ## 문서
 
-### 본 프로젝트 문서
-
 | 문서 | 설명 |
 |------|------|
 | [`README.md`](./README.md) | 한글 README (현재 문서) |
@@ -394,16 +392,6 @@ korean-law-alio                                             # REPL (대화형)
 | [`TEST-REPORT.md`](./TEST-REPORT.md) | 종합 테스트 결과 (168 cases ALL PASS) |
 | [`LICENSE`](./LICENSE) | MIT |
 | [`NOTICE`](./NOTICE) | 모든 의존성 attribution |
-
-### 원작자 보존 문서
-
-| 문서 | 설명 |
-|------|------|
-| [`README-UPSTREAM.md`](./README-UPSTREAM.md) | 원작자 README 원문 (한글) |
-| [`README-EN-UPSTREAM.md`](./README-EN-UPSTREAM.md) | 원작자 README 원문 (영문) |
-| [`CLAUDE-UPSTREAM.md`](./CLAUDE-UPSTREAM.md) | 원작자 코드 가이드 원문 |
-| [`ROADMAP-UPSTREAM.md`](./ROADMAP-UPSTREAM.md) | 원작자 ROADMAP 원문 |
-| [`CHANGELOG-UPSTREAM.md`](./CHANGELOG-UPSTREAM.md) | 원작자 변경 이력 원문 |
 
 ---
 

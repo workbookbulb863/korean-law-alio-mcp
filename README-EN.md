@@ -380,8 +380,6 @@ See [`.env.example`](./.env.example) for the full list with examples.
 
 ## Documentation
 
-### This project's docs
-
 | Doc | Purpose |
 |------|---------|
 | [`README-EN.md`](./README-EN.md) | English README (this document) |
@@ -394,16 +392,6 @@ See [`.env.example`](./.env.example) for the full list with examples.
 | [`TEST-REPORT.md`](./TEST-REPORT.md) | Comprehensive test results (168 cases ALL PASS) |
 | [`LICENSE`](./LICENSE) | MIT |
 | [`NOTICE`](./NOTICE) | All dependency attributions |
-
-### Upstream-preserved docs
-
-| Doc | Purpose |
-|------|---------|
-| [`README-UPSTREAM.md`](./README-UPSTREAM.md) | Upstream original README (Korean) |
-| [`README-EN-UPSTREAM.md`](./README-EN-UPSTREAM.md) | Upstream original README (English) |
-| [`CLAUDE-UPSTREAM.md`](./CLAUDE-UPSTREAM.md) | Upstream original code guide |
-| [`ROADMAP-UPSTREAM.md`](./ROADMAP-UPSTREAM.md) | Upstream original ROADMAP |
-| [`CHANGELOG-UPSTREAM.md`](./CHANGELOG-UPSTREAM.md) | Upstream original changelog |
 
 ---
 
