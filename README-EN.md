@@ -229,6 +229,7 @@ pip install docling
 
 **Windows:**
 Node.js alone is enough for sync to run (edge cases will be skipped).
+If Node.js isn't installed, download the LTS (20 or higher) `.msi` from [nodejs.org](https://nodejs.org) and run the installer.
 
 Sync commands:
 ```bash
@@ -237,7 +238,7 @@ npm run alio:sync -- --only C0xxx   # Single institution (apbaId 4-digit, minute
 npm run alio:sync -- --resume       # Retry failed institutions only
 ```
 
-Synced data lives in `data/alio/` (about 1.27 GB). Per-institution directories (`C0xxx`) + manifest.json + regulation markdowns.
+Synced data lives in `data/alio/` (about 1.27 GB).
 
 > The HWP/HWPX/PDF unified parser (`kordoc`) is installed automatically with `npm install`. No separate setup needed.
 

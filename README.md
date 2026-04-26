@@ -229,6 +229,7 @@ pip install docling
 
 **Windows:**
 Node.js 만 있어도 수집 자체는 동작 (특수 케이스는 건너뜀).
+Node.js 가 없다면 [nodejs.org](https://nodejs.org) 에서 LTS 버전(20 이상) `.msi` 다운로드 후 설치.
 
 수집 명령:
 ```bash
@@ -237,7 +238,7 @@ npm run alio:sync -- --only C0xxx   # 단일 기관만 (apbaId 4자리, 수 분)
 npm run alio:sync -- --resume       # 실패한 기관만 재시도
 ```
 
-수집된 데이터는 `data/alio/` 에 저장 (약 1.27GB). 기관별 디렉터리 (`C0xxx`) + manifest.json + 규정 markdown.
+수집된 데이터는 `data/alio/` 에 저장 (약 1.27GB).
 
 > HWP/HWPX/PDF 통합 파서(`kordoc`)는 `npm install` 시 자동 설치됩니다. 별도 설치 불필요.
 
