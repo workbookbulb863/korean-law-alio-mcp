@@ -1,0 +1,422 @@
+/**
+ * 법제처 API 클라이언트
+ */
+
+import { normalizeLawSearchText, resolveLawAlias } from "./search-normalizer.js"
+import { fetchWithRetry } from "./fetch-with-retry.js"
+import { sessionStore, getSessionApiKey } from "./session-state.js"
+
+const LAW_API_BASE = "https://www.law.go.kr/DRF"
+
+export class LawApiClient {
+  private defaultApiKey: string
+
+  constructor(config: { apiKey: string }) {
+    this.defaultApiKey = config.apiKey
+  }
+
+  /**
+   * API 키 결정 순서:
+   * 1. 요청별 override 키
+   * 2. 현재 세션의 API 키 (HTTP 모드)
+   * 3. 환경변수 LAW_OC
+   * 4. 생성자에서 받은 기본 키
+   */
+  private getApiKey(overrideKey?: string): string {
+    const currentSessionId = sessionStore.getStore()
+    const sessionApiKey = currentSessionId ? getSessionApiKey(currentSessionId) : undefined
+    const key = overrideKey || sessionApiKey || process.env.LAW_OC || this.defaultApiKey
+    if (!key) {
+      throw new Error("API 키가 필요합니다. 법제처(https://open.law.go.kr/LSO/openApi/guideResult.do)에서 발급받으세요.")
+    }
+    return key
+  }
+
+  /** HTTP 응답 검증 — 상태 코드 분류 + HTML 에러 페이지 감지 */
+  private throwIfError(response: Response, endpoint: string): void {
+    if (!response.ok) {
+      const status = response.status
+      if (status === 429) throw new Error(`API 요청 한도 초과 (429) - 잠시 후 다시 시도하세요.`)
+      if (status >= 500) throw new Error(`법제처 서버 오류 (${status}) - ${endpoint}`)
+      throw new Error(`API 오류 (${status}) - ${endpoint}`)
+    }
+  }
+
+  /** 응답 본문이 HTML 에러 페이지인지 확인 */
+  private checkHtmlError(text: string, context: string): void {
+    if (text.includes("<!DOCTYPE html") || text.includes("<html")) {
+      throw new Error(`${context} - API가 HTML 에러 페이지를 반환했습니다. 파라미터를 확인해주세요.`)
+    }
+  }
+
+  /**
+   * 법제처 OpenAPI 인증 실패 응답 감지.
+   *
+   * 법제처는 인증 실패 시 HTTP 200 + 다음 형태 XML 을 반환한다 (HTML 에러 페이지 X):
+   *   <Response>
+   *     <result>사용자 정보 검증에 실패하였습니다.</result>
+   *     <msg>OPEN API 호출 시 사용자 검증을 위하여 정확한 서버장비의 IP주소 및 도메인주소를 등록해 주세요.</msg>
+   *   </Response>
+   *
+   * 이 응답을 그대로 caller 에 넘기면 `<law>` 태그 0개로 보여 "검색 결과 없음" 으로 마스킹된다.
+   * 명시적으로 throw 해서 사용자가 ACL 등록 문제임을 인지하도록.
+   */
+  private checkAuthFailure(text: string, endpoint: string): void {
+    if (text.includes("사용자 정보 검증에 실패")) {
+      throw new Error(
+        `법제처 OpenAPI 인증 실패 (${endpoint}) — 등록된 IP/도메인이 아닙니다.\n` +
+        `→ https://open.law.go.kr/LSO/openApi/userMypage.do 에서 호출 서버의 IP 또는 도메인을 등록하세요.\n` +
+        `  (Fly.io 등 원격 배포 시 도메인 등록 권장 — IP는 머신 재시작 시 변할 수 있음)`
+      )
+    }
+  }
+
+  /** fetch + status 검증 + 인증 실패 감지 + text 반환 (모든 법제처 OpenAPI 호출의 진입점) */
+  private async fetchText(url: string, endpoint: string): Promise<string> {
+    const response = await fetchWithRetry(url)
+    this.throwIfError(response, endpoint)
+    const text = await response.text()
+    this.checkAuthFailure(text, endpoint)
+    return text
+  }
+
+  /**
+   * 법령 검색
+   */
+  async searchLaw(query: string, apiKey?: string): Promise<string> {
+    const normalizedQuery = normalizeLawSearchText(query)
+    const aliasResolution = resolveLawAlias(normalizedQuery)
+    const finalQuery = aliasResolution.canonical
+
+    const params = new URLSearchParams({
+      OC: this.getApiKey(apiKey),
+      type: "XML",
+      target: "law",
+      query: finalQuery,
+    })
+
+    const url = `${LAW_API_BASE}/lawSearch.do?${params.toString()}`
+    return await this.fetchText(url, "searchLaw")
+  }
+
+  /**
+   * 현행법령 조회
+   */
+  async getLawText(params: {
+    mst?: string
+    lawId?: string
+    jo?: string
+    efYd?: string
+    apiKey?: string
+  }): Promise<string> {
+    const apiParams = new URLSearchParams({
+      target: "eflaw",
+      OC: this.getApiKey(params.apiKey),
+      type: "JSON",
+    })
+
+    if (params.mst) apiParams.append("MST", String(params.mst))
+    if (params.lawId) apiParams.append("ID", String(params.lawId))
+    if (params.jo) apiParams.append("JO", String(params.jo))
+    if (params.efYd) apiParams.append("efYd", String(params.efYd))
+
+    const url = `${LAW_API_BASE}/lawService.do?${apiParams.toString()}`
+    const text = await this.fetchText(url, "getLawText")
+
+    if (text.includes("<!DOCTYPE html") || text.includes("<html")) {
+      let errorMsg = "법령을 찾을 수 없습니다."
+
+      if (params.jo) {
+        errorMsg += "\n\n💡 개선 방법:"
+        errorMsg += "\n   1. 전체 법령 조회 (조문 범위 확인):"
+        if (params.mst) {
+          errorMsg += `\n      get_law_text(mst="${params.mst}")`
+        } else if (params.lawId) {
+          errorMsg += `\n      get_law_text(lawId="${params.lawId}")`
+        }
+        errorMsg += "\n\n   2. 키워드 검색:"
+        errorMsg += `\n      search_all(query="관련 키워드")`
+        errorMsg += "\n\n   3. 법령 검색:"
+        errorMsg += `\n      search_law(query="법령명")`
+        errorMsg += "\n\n   ℹ️  일부 법령은 조문 수가 적습니다 (예: 약사법 시행령 제1~39조)"
+      } else {
+        errorMsg += " MST 또는 법령명을 확인해주세요."
+      }
+
+      throw new Error(errorMsg)
+    }
+
+    return text
+  }
+
+  /**
+   * 신구법 대조
+   */
+  async compareOldNew(params: {
+    mst?: string
+    lawId?: string
+    ld?: string
+    ln?: string
+    apiKey?: string
+  }): Promise<string> {
+    const apiParams = new URLSearchParams({
+      target: "oldAndNew",
+      OC: this.getApiKey(params.apiKey),
+      type: "XML",
+    })
+
+    if (params.mst) apiParams.append("MST", String(params.mst))
+    if (params.lawId) apiParams.append("ID", String(params.lawId))
+    if (params.ld) apiParams.append("LD", String(params.ld))
+    if (params.ln) apiParams.append("LN", String(params.ln))
+
+    const url = `${LAW_API_BASE}/lawService.do?${apiParams.toString()}`
+    return await this.fetchText(url, "compareOldNew")
+  }
+
+  /**
+   * 3단비교 (위임조문)
+   */
+  async getThreeTier(params: {
+    mst?: string
+    lawId?: string
+    knd?: "1" | "2"
+    apiKey?: string
+  }): Promise<string> {
+    const apiParams = new URLSearchParams({
+      target: "thdCmp",
+      OC: this.getApiKey(params.apiKey),
+      type: "JSON",
+      knd: params.knd || "2",
+    })
+
+    if (params.mst) apiParams.append("MST", String(params.mst))
+    if (params.lawId) apiParams.append("ID", String(params.lawId))
+
+    const url = `${LAW_API_BASE}/lawService.do?${apiParams.toString()}`
+    return await this.fetchText(url, "getThreeTier")
+  }
+
+  /**
+   * 행정규칙 검색
+   */
+  async searchAdminRule(params: {
+    query: string
+    knd?: string
+    apiKey?: string
+  }): Promise<string> {
+    const apiParams = new URLSearchParams({
+      OC: this.getApiKey(params.apiKey),
+      type: "XML",
+      target: "admrul",
+      query: params.query,
+    })
+
+    if (params.knd) apiParams.append("knd", params.knd)
+
+    const url = `${LAW_API_BASE}/lawSearch.do?${apiParams.toString()}`
+    return await this.fetchText(url, "searchAdminRule")
+  }
+
+  /**
+   * 행정규칙 조회
+   */
+  async getAdminRule(id: string, apiKey?: string): Promise<string> {
+    const apiParams = new URLSearchParams({
+      target: "admrul",
+      OC: this.getApiKey(apiKey),
+      type: "XML",
+      ID: id,
+    })
+
+    const url = `${LAW_API_BASE}/lawService.do?${apiParams.toString()}`
+    const text = await this.fetchText(url, "getAdminRule")
+    this.checkHtmlError(text, "행정규칙을 찾을 수 없습니다. ID를 확인해주세요")
+
+    return text
+  }
+
+  /**
+   * 별표/서식 조회
+   * lawSearch.do + target=licbyl 방식
+   */
+  async getAnnexes(params: {
+    lawName: string
+    knd?: "1" | "2" | "3" | "4" | "5"
+    apiKey?: string
+  }): Promise<string> {
+    // 법령 종류 판별
+    const lawType = this.detectLawType(params.lawName)
+    const targetMap = {
+      law: "licbyl",
+      ordinance: "ordinbyl",
+      admin: "admbyl",
+    }
+    const target = targetMap[lawType]
+
+    const apiParams = new URLSearchParams({
+      target,
+      OC: this.getApiKey(params.apiKey),
+      type: "JSON",
+      query: params.lawName,
+      search: "2", // 해당법령으로 검색
+      display: "100", // 최대 100개
+    })
+
+    // 일반 법령만 knd 필터 적용
+    if (lawType === 'law' && params.knd) {
+      apiParams.set("knd", params.knd)
+    }
+
+    const url = `${LAW_API_BASE}/lawSearch.do?${apiParams.toString()}`
+    return await this.fetchText(url, "getAnnexes")
+  }
+
+  /**
+   * 법령 종류 판별
+   */
+  private detectLawType(lawName: string): 'law' | 'ordinance' | 'admin' {
+    // 조례/규칙 판별 (자치법규)
+    if (/조례/.test(lawName) ||
+      /(특별시|광역시|도|시|군|구)\s+[가-힣]+\s*(조례|규칙)/.test(lawName)) {
+      return 'ordinance'
+    }
+
+    // 시행령/시행규칙/령이 있으면 일반 법령
+    if (/(시행령|시행규칙|령)/.test(lawName)) {
+      return 'law'
+    }
+
+    // 행정규칙: 훈령, 예규, 고시, 지침, 내규
+    if (/훈령|예규|고시|지침|내규/.test(lawName)) {
+      return 'admin'
+    }
+
+    // 일반 법령 (법, 규정 등)
+    return 'law'
+  }
+
+  /**
+   * 자치법규 검색
+   */
+  async searchOrdinance(params: {
+    query: string
+    display?: number
+    apiKey?: string
+  }): Promise<string> {
+    const apiParams = new URLSearchParams({
+      target: "ordin",
+      OC: this.getApiKey(params.apiKey),
+      type: "XML",
+      query: params.query,
+      display: (params.display || 20).toString(),
+    })
+
+    const url = `${LAW_API_BASE}/lawSearch.do?${apiParams.toString()}`
+    return await this.fetchText(url, "searchOrdinance")
+  }
+
+  /**
+   * 자치법규 조회
+   */
+  async getOrdinance(ordinSeq: string, apiKey?: string): Promise<string> {
+    const apiParams = new URLSearchParams({
+      target: "ordin",
+      OC: this.getApiKey(apiKey),
+      type: "JSON",
+      MST: ordinSeq,
+    })
+
+    const url = `${LAW_API_BASE}/lawService.do?${apiParams.toString()}`
+    const text = await this.fetchText(url, "getOrdinance")
+    this.checkHtmlError(text, "자치법규를 찾을 수 없습니다. ordinSeq를 확인해주세요")
+
+    return text
+  }
+
+  /**
+   * 일자별 조문 개정 이력 조회
+   */
+  async getArticleHistory(params: {
+    lawId?: string
+    jo?: string
+    regDt?: string
+    fromRegDt?: string
+    toRegDt?: string
+    org?: string
+    page?: number
+    apiKey?: string
+  }): Promise<string> {
+    const apiParams = new URLSearchParams({
+      target: "lsJoHstInf",
+      OC: this.getApiKey(params.apiKey),
+      type: "XML",
+    })
+
+    if (params.lawId) apiParams.append("ID", String(params.lawId))
+    if (params.jo) apiParams.append("JO", String(params.jo))
+    if (params.regDt) apiParams.append("regDt", String(params.regDt))
+    if (params.fromRegDt) apiParams.append("fromRegDt", String(params.fromRegDt))
+    if (params.toRegDt) apiParams.append("toRegDt", String(params.toRegDt))
+    if (params.org) apiParams.append("org", String(params.org))
+    if (params.page) apiParams.append("page", params.page.toString())
+
+    const url = `${LAW_API_BASE}/lawSearch.do?${apiParams.toString()}`
+    return await this.fetchText(url, "getArticleHistory")
+  }
+
+  /**
+   * 범용 API 호출 (fetchWithRetry 기반)
+   */
+  async fetchApi(params: {
+    endpoint: "lawSearch.do" | "lawService.do"
+    target: string
+    type?: "XML" | "JSON" | "HTML"
+    extraParams?: Record<string, string>
+    apiKey?: string
+  }): Promise<string> {
+    const init: Record<string, string> = {
+      OC: this.getApiKey(params.apiKey),
+      target: params.target,
+    }
+    if (params.type) init.type = params.type
+    const apiParams = new URLSearchParams(init)
+
+    if (params.extraParams) {
+      for (const [key, value] of Object.entries(params.extraParams)) {
+        apiParams.append(key, String(value))
+      }
+    }
+
+    const url = `${LAW_API_BASE}/${params.endpoint}?${apiParams.toString()}`
+    const text = await this.fetchText(url, `fetchApi(${params.target})`)
+    this.checkHtmlError(text, "API 응답 오류 - 파라미터를 확인해주세요")
+
+    return text
+  }
+
+  /**
+   * 법령 변경이력 목록 조회
+   */
+  async getLawHistory(params: {
+    regDt: string
+    org?: string
+    display?: number
+    page?: number
+    apiKey?: string
+  }): Promise<string> {
+    const apiParams = new URLSearchParams({
+      target: "lsHstInf",
+      OC: this.getApiKey(params.apiKey),
+      type: "XML",
+      regDt: params.regDt,
+    })
+
+    if (params.org) apiParams.append("org", params.org)
+    if (params.display) apiParams.append("display", params.display.toString())
+    if (params.page) apiParams.append("page", params.page.toString())
+
+    const url = `${LAW_API_BASE}/lawSearch.do?${apiParams.toString()}`
+    return await this.fetchText(url, "getLawHistory")
+  }
+}

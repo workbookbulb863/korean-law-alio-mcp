@@ -1,0 +1,96 @@
+{
+  "name": "korean-law-alio-mcp",
+  "version": "1.0.0",
+  "description": "국가법령정보센터(법제처) + ALIO 공공기관 규정 통합 MCP 서버 — 35,000건 이상의 법령·공공기관 내부규정을 자연어로 조회·비교·분석",
+  "type": "module",
+  "main": "build/index.js",
+  "types": "build/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./build/index.d.ts",
+      "import": "./build/index.js"
+    },
+    "./lib/*": {
+      "types": "./build/lib/*.d.ts",
+      "import": "./build/lib/*.js"
+    },
+    "./tools/*": {
+      "types": "./build/tools/*.d.ts",
+      "import": "./build/tools/*.js"
+    },
+    "./server/*": {
+      "types": "./build/server/*.d.ts",
+      "import": "./build/server/*.js"
+    }
+  },
+  "bin": {
+    "korean-law-alio-mcp": "build/index.js",
+    "korean-law-alio": "build/cli.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc --watch",
+    "start": "node build/index.js",
+    "start:sse": "node build/index.js --mode sse --port 3000",
+    "cli": "node build/cli.js",
+    "alio:sync": "node build/scripts/alio-sync.js",
+    "test": "npm run build && node test/index.mjs",
+    "test:build": "node test/build.test.mjs",
+    "test:router": "node test/router.test.mjs",
+    "test:cli": "node test/cli.test.mjs",
+    "test:alio": "node test/alio.test.mjs",
+    "test:law": "node test/law.test.mjs",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "mcp",
+    "cli",
+    "korean-law",
+    "alio",
+    "법령",
+    "공공기관",
+    "규정",
+    "claude",
+    "model-context-protocol"
+  ],
+  "author": "scvcoder",
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.27.1",
+    "@xmldom/xmldom": "^0.9.8",
+    "commander": "^14.0.3",
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1",
+    "jszip": "^3.10.1",
+    "kordoc": "^2.5.2",
+    "pdfjs-dist": "^5.5.207",
+    "zod": "^3.25.76 || ^4.0.0",
+    "zod-to-json-schema": "^3.25.1"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/node": "^22.19.3",
+    "typescript": "^5.9.3"
+  },
+  "files": [
+    "build",
+    "README.md",
+    "README-EN.md",
+    "LICENSE",
+    "NOTICE"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/scvcoder/korean-law-alio-mcp.git"
+  },
+  "homepage": "https://github.com/scvcoder/korean-law-alio-mcp#readme",
+  "bugs": {
+    "url": "https://github.com/scvcoder/korean-law-alio-mcp/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=20.19.0"
+  }
+}

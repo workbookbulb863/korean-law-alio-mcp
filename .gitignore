@@ -1,0 +1,17 @@
+node_modules/
+build/
+dist/
+*.log
+.DS_Store
+.env
+.env.local
+test-*.js
+# ALIO 수집 데이터 (대용량, 재생성 가능)
+data/alio/
+# GitHub Releases 용 압축본 (대용량, release 에만 업로드, repo 에는 X)
+alio-data.tar.gz
+alio-data.zip
+alio-data-*.tar.gz
+alio-data-*.zip
+# Claude Code 개인 환경 설정·작업 메모
+.claude/

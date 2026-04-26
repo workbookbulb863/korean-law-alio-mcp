@@ -1,0 +1,339 @@
+korean-law-alio-mcp
+===================
+
+This software is a derivative work based on the open-source projects listed
+below. All works are distributed under permissive licenses (MIT / BSD / ISC /
+Apache-2.0) and are compatible with the MIT License under which this software
+is released. See LICENSE for the full text of the MIT License.
+
+
+--------------------------------------------------------------------------------
+Derived from
+--------------------------------------------------------------------------------
+
+[1] korean-law-mcp
+    https://github.com/chrisryugj/korean-law-mcp
+    Copyright (c) 2025 Chris
+    License: MIT
+
+    Provides the base MCP server infrastructure for the Korean law (법제처)
+    Open API. The 87 law-related MCP tools, the natural-language query router,
+    the CLI (cli.ts, cli-format.ts, cli-executor.ts), the API client wrapper
+    (api-client.ts), and the chain tools were carried over from this project
+    largely unmodified.
+
+
+--------------------------------------------------------------------------------
+Bundled / runtime dependencies (npm)
+--------------------------------------------------------------------------------
+
+The following packages are listed in package.json and are installed via npm
+when users install this software. Each package's full license text is included
+under node_modules/<pkg>/LICENSE after `npm install`.
+
+  @modelcontextprotocol/sdk       MIT             Anthropic, PBC
+                                                  https://github.com/modelcontextprotocol/typescript-sdk
+
+  @xmldom/xmldom                  MIT             xmldom contributors
+                                                  https://github.com/xmldom/xmldom
+
+  commander                       MIT             TJ Holowaychuk
+                                                  https://github.com/tj/commander.js
+
+  dotenv                          BSD-2-Clause    Motdotla
+                                                  https://github.com/motdotla/dotenv
+
+  express                         MIT             TJ Holowaychuk
+                                                  https://github.com/expressjs/express
+
+  jszip                           MIT             Stuart Knightley
+                                  (or GPL-3.0)    https://github.com/Stuk/jszip
+                                                  (we elect the MIT terms)
+
+  kordoc                          MIT             chrisryugj
+                                                  https://github.com/chrisryugj/kordoc
+
+                                  HWP / HWPX / PDF / DOCX / XLSX unified parser.
+                                  Core dependency for ALIO regulation body
+                                  extraction.
+
+  pdfjs-dist                      Apache-2.0      Mozilla Foundation
+                                                  https://github.com/mozilla/pdf.js
+
+                                  Apache-2.0 §4(d): no NOTICE file is shipped
+                                  by the upstream package, so no additional
+                                  notice text is required here.
+
+  zod                             MIT             Colin McDonnell
+                                                  https://github.com/colinhacks/zod
+
+  zod-to-json-schema              ISC             Stefan Terdell
+                                                  https://github.com/StefanTerdell/zod-to-json-schema
+
+
+--------------------------------------------------------------------------------
+Build-time only (devDependencies)
+--------------------------------------------------------------------------------
+
+These are not redistributed in the build output (`build/`) but are required
+to compile this software from source.
+
+  typescript                      Apache-2.0      Microsoft Corp.
+                                                  https://github.com/microsoft/TypeScript
+
+  @types/express                  MIT             DefinitelyTyped
+  @types/node                     MIT             DefinitelyTyped
+
+
+--------------------------------------------------------------------------------
+External tools (optional, invoked at runtime as separate processes)
+--------------------------------------------------------------------------------
+
+These are NOT bundled with this software. They are invoked via child_process
+spawn only when the corresponding fallback path is activated by the
+`alio-sync` script. Users must install them separately on their machine.
+
+  LibreOffice (soffice)           MPL-2.0         The Document Foundation
+                                                  https://www.libreoffice.org
+
+                                  Used for HWP 3.0 / .xls / .xlsx → DOCX/PDF
+                                  conversion. As we invoke `soffice` as a
+                                  separate executable (not statically linked
+                                  or modified), there are no source-disclosure
+                                  obligations on our side.
+
+  docling                         MIT             IBM (DS4SD project)
+                                                  https://github.com/DS4SD/docling
+
+                                  Document → Markdown converter. Used as a
+                                  Python CLI for OCR (PDF), DOCX, and XLSX
+                                  parsing fallbacks.
+
+  tesseract                       Apache-2.0      Google / community
+                                                  https://github.com/tesseract-ocr/tesseract
+
+                                  OCR engine used by docling for Korean +
+                                  English text recognition (--ocr-engine
+                                  tesseract --ocr-lang kor+eng).
+
+  Optional OCR engines that docling can use (all permissive licenses):
+    easyocr      Apache-2.0    JaidedAI
+    tesserocr    MIT           Anaconda team / community
+    ocrmac       MIT           Apple Vision API wrapper (macOS only)
+
+
+--------------------------------------------------------------------------------
+Data sources
+--------------------------------------------------------------------------------
+
+This project does NOT bundle any data from these sources. End users invoke the
+sync scripts and MCP tools on their own machines to fetch data on demand. The
+notes below document the legal basis on which that fetching is performed and
+the operational compliance posture of this project.
+
+  ALIO (alio.go.kr)               Public data           대한민국 공공기관
+                                                        경영정보 공개시스템
+
+    Endpoints called (all unauthenticated, public):
+      POST /item/itemOrganListSusi.json    — institution list
+      POST /item/itemReportListSusi.json   — regulation list per institution
+      GET  /item/itemBoard21110.do         — regulation detail HTML
+      GET  /download/rulefiledown.json     — regulation file binary
+
+    Legal basis:
+      - 저작권법 (Copyright Act of Korea), Article 24-2
+        (공공저작물의 자유이용, Free Use of Public Works): works authored by
+        public institutions in the course of their duties may be used freely
+        without separate permission.
+      - 공공데이터법 (Act on Provision and Use Activation of Public Data),
+        Article 3 (Basic Principles): public data held by public institutions
+        is free to use, including for commercial purposes.
+
+    ALIO's published policy (alio.go.kr/notice/copyright.do): materials for
+    which ALIO holds the full copyright are freely usable. Exceptions are
+    (a) materials non-disclosable under Article 9 of the 정보공개법
+    (Information Disclosure Act), (b) materials whose third-party rights
+    are protected, and (c) materials whose third-party rights are protected
+    by other statutes.
+
+    Common compliance posture (both operational modes):
+      - robots.txt: ALIO publishes "User-agent: *  Allow: /" — full crawl
+        permitted; we comply.
+      - User-Agent: identifies this project explicitly
+        ("Mozilla/5.0 (korean-law-alio-mcp) ...") — no anonymization.
+      - Concurrency: default 3 parallel requests, with 1s exponential
+        backoff on retry. Adjustable via --concurrency N.
+      - Attribution: each regulation's ALIO source URL is preserved in the
+        per-institution manifest.json (`sourceDetailUrl`) and exposed via
+        the `get_alio_external_links` MCP tool, so downstream tool outputs
+        always carry a verifiable link back to the official ALIO page.
+
+    Operational modes (two supported — different responsibility allocations):
+
+    (a) Local MCP (STDIO, run by end user)
+        - data/alio/ stays on the end user's own machine. .gitignored in
+          this repository — never bundled into npm package or git clone.
+        - The end user runs `npm run alio:sync` themselves and bears
+          responsibility for data freshness, storage, and any downstream
+          use including redistribution or commercialization.
+
+    (b) Remote MCP (HTTP/SSE, deployed by the maintainer)
+        - data/alio/ is held on the maintainer's (scvcoder) server
+          persistent volume. End users connect via URL and receive
+          responses immediately, without doing their own sync.
+        - LAW_OC API key is kept exclusively in server secrets (e.g.,
+          Fly.io secrets) — never in source, image layers, or logs.
+        - No personal-data masking beyond what ALIO itself publishes
+          (i.e., the public regulation text). Any internal-use personal
+          references published by an institution remain as-is.
+
+        Data freshness — user-verifiable, not maintainer-guaranteed:
+          * Every ALIO-related response preserves the `fetchedAt` timestamp
+            from the manifest, indicating when that regulation was last
+            synced from the ALIO source.
+          * The `get_alio_external_links` tool and the `sourceDetailUrl`
+            field included in responses always point to the live ALIO page,
+            so users can verify the current text directly at any time.
+          * The maintainer does NOT commit to any specific sync cadence.
+            Re-syncs happen on a best-effort basis, at irregular intervals,
+            and may not happen at all for any given period. There may be a
+            gap — possibly large — between the snapshot held on the server
+            and ALIO's current publication.
+          * Any decision, action, practice, interpretation, or legal
+            judgment that the user makes based on the served snapshot —
+            including any harm or loss caused by the gap between the
+            snapshot and ALIO's current publication — is solely the user's
+            responsibility. The user is expected to verify against the live
+            ALIO page via `sourceDetailUrl` whenever currency matters.
+
+        Free / volunteer-operated service — no warranty:
+          * This remote endpoint is operated by the maintainer (scvcoder)
+            on a non-commercial, volunteer basis. There are no fees,
+            subscriptions, advertisements, or revenue of any kind from
+            providing the service.
+          * The service is provided strictly "AS IS" and "AS AVAILABLE",
+            without any warranty of availability, response time, accuracy,
+            data currency, fitness for any particular purpose, or
+            continuity.
+          * The service may be interrupted, paused, throttled, degraded,
+            permanently discontinued, or impaired at any time without prior
+            notice and without obligation. To the maximum extent permitted
+            by applicable Korean law — including the general liability
+            framework applied to gratuitous service providers under the
+            Korean Civil Code — the maintainer accepts no liability for
+            any direct, indirect, incidental, consequential, or other
+            damage, loss, missed opportunity, or claim arising from or in
+            connection with the use of, inability to use, interruption of,
+            or content delivered by this service.
+          * The above disclaimer does not purport to exclude liability
+            that, under mandatory provisions of Korean law, cannot be
+            disclaimed (notably willful misconduct and gross negligence of
+            the maintainer); for all other matters the disclaimer applies
+            in full.
+          * Do not rely on this service as the sole basis for any legal,
+            regulatory, policy, contractual, or business decision. Always
+            cross-verify against the original ALIO and 법제처 sources.
+
+        Redistribution / commercialization by end users:
+          * When users redistribute, commercialize, or republish content
+            received through this remote endpoint, they are solely
+            responsible for verifying compliance with 저작권법 §24-2,
+            공공데이터법 §3, and ALIO's policy (alio.go.kr/notice/copyright.do)
+            at the time of use. Receipt through this endpoint does not
+            transfer any additional rights from the maintainer.
+
+    The maintainer (scvcoder) acts solely as a free, volunteer fetcher and
+    re-presenter of public data under the free-use statutes cited above.
+
+  법제처 OpenAPI (open.law.go.kr)   Public data         대한민국 법제처
+                                                        Open Government Data
+
+    The 87 law-related MCP tools call this API (requires LAW_OC application
+    ID, issued free of charge by 법제처 at:
+    open.law.go.kr/LSO/openApi/guideResult.do).
+
+    Returned data are public-sector statutes / precedents / interpretations
+    / rules / treaties / committee decisions subject to the same Article
+    24-2 / Public Data Act free-use principles. Each tool output preserves
+    source identifiers (MST, lawId, precedent ID, etc.) for verification.
+
+
+--------------------------------------------------------------------------------
+Modifications and additions in korean-law-alio-mcp
+--------------------------------------------------------------------------------
+
+The following are new in this fork (also licensed under MIT):
+
+  - src/lib/alio/         ALIO HTTP client, manifest, runtime indexer (with
+                          memory cache + TTL), title-similarity / topic-keyword
+                          helpers, OCR / Excel / HWP3 / nested-ZIP fallback
+                          pipelines, environment-variable config parser
+  - src/scripts/          Batch sync orchestrator (alio-sync.ts) with auto
+                          docling/tesseract fallback detection
+  - src/tools/alio/       23 new MCP tools for public-institution regulations:
+                            * search & autocomplete (4): institution lookup,
+                              regulation list, body retrieval, full-text search,
+                              regulation-name autocomplete
+                            * advanced filtered search (1): category + ministry
+                              + type + date-range + keyword composite filter
+                            * comparison & analysis (5): topic N:N compare,
+                              article 1:1 compare, timeline compare, similar-
+                              regulation 1:N matching, peer-gap benchmark
+                            * history & change monitoring (2): per-regulation
+                              revision history, recent-revisions across
+                              institutions
+                            * upstream-law linkage (2): delegation analysis
+                              (regulation -> upstream law), reverse search
+                            * data overview & metadata (3): collection
+                              statistics, institution profile, single-regulation
+                              structural analysis
+                            * body structure & links (4): annex extraction,
+                              article cross-reference parsing, external ALIO /
+                              download URLs, batch retrieval (up to 20)
+                            * chain (1): one-shot benchmarking pipeline
+                              (profile + topic match + peer gap)
+  - data/alio/            Local cache of 35,000+ regulation MDs across 344
+                          Korean public institutions. .gitignored in this
+                          repository (not bundled into git/npm). Populated
+                          on demand: by the end user under local MCP mode,
+                          or on the server's persistent volume under remote
+                          MCP mode. See "Data sources" section above for
+                          the full responsibility allocation.
+  - test/                 ESM test suite for build / router / ALIO / law tools
+                          (141 cases total); existing test/*.cjs preserved
+
+Dependency changes:
+  - kordoc upgraded from 1.6.x to 2.5.2 (major bump, breaking changes accepted)
+  - jszip added as a direct dependency (was transitive via kordoc)
+  - dotenv now consumed by the CLI (cli.ts) for automatic .env loading
+
+
+--------------------------------------------------------------------------------
+License hygiene (clean-room rewrites)
+--------------------------------------------------------------------------------
+
+To avoid linking with BSL 1.1 / Source-Available code from the upstream
+codebase, the following four files were rewritten from scratch in this fork,
+referencing only caller signatures and the public 법제처 (law.go.kr) Open API
+specification. They contain no derivative content from any non-permissive
+license:
+
+  - src/lib/search-normalizer.ts   Search-query normalization + alias
+                                   resolution (uses only the public 법제처
+                                   alias table)
+  - src/lib/law-parser.ts          Article-number / JO-code conversion (uses
+                                   only the public 법제처 OpenAPI spec)
+  - src/lib/three-tier-parser.ts   3-tier comparison (thdCmp) response parser
+                                   (uses only the public 법제처 OpenAPI spec)
+  - src/tools/historical-law.ts    Historical-law search and snapshot retrieval
+                                   (uses only the public 법제처 OpenAPI spec)
+
+Result: all first-party code in this project is licensed solely under MIT. No
+BSL, SSPL, Source-Available, or other non-permissive code is bundled.
+
+
+--------------------------------------------------------------------------------
+
+For the full text of the MIT License governing this software, see the LICENSE
+file at the root of this repository. For the licenses of bundled dependencies,
+inspect node_modules/<package>/LICENSE after running `npm install`.

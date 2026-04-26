@@ -1,0 +1,29 @@
+# fly.toml app configuration file generated for korean-law-alio-mcp on 2026-01-18T12:11:34+09:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = 'korean-law-alio-mcp'
+primary_region = 'nrt'
+
+[build]
+  dockerfile = 'Dockerfile'
+
+[env]
+  NODE_ENV = 'production'
+  PORT = '3000'
+
+[http_service]
+  internal_port = 3000
+  force_https = true
+  auto_stop_machines = 'suspend'
+  auto_start_machines = true
+  min_machines_running = 0
+
+[[vm]]
+  # ALIO 데이터 포함 (Mode B): manifest 인덱스 ~80-100MB heap + Node 런타임
+  # 256mb 로는 OOM 위험 → 512mb 로 상향
+  memory = '512mb'
+  cpu_kind = 'shared'
+  cpus = 1
+  memory_mb = 512

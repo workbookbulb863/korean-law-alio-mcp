@@ -1,0 +1,87 @@
+# =====================================================================
+# Docker build context exclusions
+# =====================================================================
+# 원칙:
+#   1. SECRETS 절대 제외 (.env, *.key, *.pem)
+#   2. VCS/IDE/OS noise 제외
+#   3. 런타임 불필요 dev artifact 제외 (node_modules, build, test, docs)
+#   4. ALIO data 의 .md / manifest.json 은 INCLUDE (Mode B — 이미지에 굽기)
+#      → 이전 `*.md` 광범위 룰을 제거하고 docs 만 명시 제외
+#   5. ALIO 내부 sync-state, 원본 파일은 제외 (런타임 불필요)
+# =====================================================================
+
+# === Secrets ===
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+*.crt
+
+# === Dev artifacts ===
+node_modules
+build
+dist
+*.log
+npm-debug.log*
+yarn-debug.log*
+.npm
+
+# === VCS / CI ===
+.git
+.gitignore
+.gitattributes
+.github
+
+# === IDE / Editor ===
+.vscode
+.idea
+.cursor
+.windsurf
+*.swp
+*.swo
+
+# === OS noise ===
+**/.DS_Store
+Thumbs.db
+desktop.ini
+
+# === 로컬 agent / scratch state ===
+.claude
+.cursor-rules
+.aider*
+
+# === 문서 (런타임 불필요) ===
+README.md
+README-*.md
+CHANGELOG.md
+CHANGELOG-*.md
+ROADMAP.md
+ROADMAP-*.md
+CONTRIBUTING.md
+CLAUDE.md
+CLAUDE-*.md
+TEST-REPORT.md
+docs/
+
+# === 테스트 ===
+test/
+*.test.mjs
+*.test.cjs
+*.test.ts
+
+# === ALIO 내부 sync 상태 + 원본 파일 (런타임 불필요) ===
+data/sync-state.json
+data/**/*.raw.*
+data/**/*.hwp
+data/**/*.hwpx
+
+# === 예시 / 데모 ===
+.env.example
+.mcp.json
+demo.png
+demo.gif
+
+# === Plans / 임시 ===
+*.bak
+*.tmp

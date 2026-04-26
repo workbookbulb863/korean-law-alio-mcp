@@ -1,0 +1,13 @@
+{
+  "_comment": "MCP 클라이언트 설정 예시 — 본인 환경에 맞게 수정 후 사용. .env 의 LAW_OC 를 그대로 쓰려면 'env' 블록 자체를 삭제하고 환경변수로 주입.",
+  "mcpServers": {
+    "korean-law-alio": {
+      "type": "stdio",
+      "command": "node",
+      "args": ["/절대경로/korean-law-alio-mcp/build/index.js"],
+      "env": {
+        "LAW_OC": "your-api-key-here"
+      }
+    }
+  }
+}
