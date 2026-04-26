@@ -1,16 +1,16 @@
-# Korean Law + ALIO MCP
+# Korean Law ALIO MCP
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 [![Tools: 110](https://img.shields.io/badge/MCP%20Tools-110-blue.svg)](./docs/API.md)
 [![ALIO Coverage: 35,000+](https://img.shields.io/badge/ALIO%20Regulations-35%2C000%2B-green.svg)](#-what-this-fork-adds-vs-upstream-v22)
 
-> 📂 This project was **forked on 2026-04-25** from [chrisryugj/korean-law-mcp](https://github.com/chrisryugj/korean-law-mcp).
-> - The original README is preserved as-is in [`README-EN-UPSTREAM.md`](./README-EN-UPSTREAM.md)
-> - Korean: [`README.md`](./README.md) · Original Korean README: [`README-UPSTREAM.md`](./README-UPSTREAM.md)
-
 ---
 
-**110 AI tools across 1,600+ active laws, 10,000+ administrative rules, tens of thousands of court precedents, and 35,000+ internal regulations from 344 Korean public institutions — now read and compared by your AI assistant.**
+An MCP for searching, comparing, and analyzing Korean national law (법제처) and the internal regulations of public institutions (ALIO).
+
+110 MCP tools — 87 Korean Law portal + 23 ALIO public-institution regulations — perform the analysis.
+
+Searches and compares 1,600 active laws, 10,000 administrative rules, tens of thousands of court precedents, and 35,000 internal regulations across 344 public institutions, then feeds the results to your AI assistant for higher-quality answers.
 
 ---
 
@@ -313,6 +313,15 @@ Full dependency attributions are in [`NOTICE`](./NOTICE); motivation in [`ROADMA
 
 All first-party code in this project is licensed under MIT only. No BSL or Source-Available code is bundled.
 ([Details on license-hygiene work](./CHANGELOG.md#security--license-hygiene))
+
+---
+
+## 📂 Notes — fork info
+
+This project was **forked on 2026-04-25** from [chrisryugj/korean-law-mcp](https://github.com/chrisryugj/korean-law-mcp).
+
+- The original README is preserved as-is in [`README-EN-UPSTREAM.md`](./README-EN-UPSTREAM.md)
+- Korean: [`README.md`](./README.md) · Original Korean README: [`README-UPSTREAM.md`](./README-UPSTREAM.md)
 
 ---
 
