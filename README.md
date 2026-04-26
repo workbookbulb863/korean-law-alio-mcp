@@ -94,15 +94,22 @@
 
 > 아래 모든 예시의 `your-api-key-here` 는 placeholder — 본인 발급 키로 교체하세요. ([`.env.example`](./.env.example) 와 동일 컨벤션)
 
-### 방법 1: Claude Code 플러그인 — 한 줄 설치 준비 중
+### 방법 1: Claude Code 플러그인 — 한 줄 설치
 
-> 마켓플레이스 등록은 다음 릴리스에 활성화 예정. 지금은 방법 2~5 사용.
+본인 API 키를 먼저 환경변수로 export 해두면 설치 시 자동 주입됩니다.
 
-향후 활성화 시:
+```bash
+export LAW_OC=your-api-key-here   # ~/.zshrc 또는 ~/.bashrc 에 추가하면 영구 적용
+```
+
+이후 Claude Code 안에서:
+
 ```
 /plugin marketplace add scvcoder/korean-law-alio-mcp
 /plugin install korean-law-alio@korean-law-alio-marketplace
 ```
+
+설치 후 자동으로 `npx -y korean-law-alio-mcp` 가 실행되며 `LAW_OC` 가 전달됩니다. 별도 설정 파일 편집 불필요.
 
 ### 방법 2: Claude.ai 웹에서 바로 사용 (설치 없음) 가장 간편
 

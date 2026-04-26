@@ -94,15 +94,22 @@ All methods share one prerequisite — a **Korean Law portal API key (OC)**:
 
 > All examples below use `your-api-key-here` as a placeholder — replace with your issued key. (Same convention as [`.env.example`](./.env.example))
 
-### Method 1: Claude Code Plugin — One-line install Coming soon
+### Method 1: Claude Code Plugin — One-line install
 
-> Marketplace registration is planned for the next release. For now, use Methods 2–5.
+Export your API key first so it gets auto-injected at install time:
 
-When activated:
+```bash
+export LAW_OC=your-api-key-here   # add to ~/.zshrc or ~/.bashrc to persist
+```
+
+Then inside Claude Code:
+
 ```
 /plugin marketplace add scvcoder/korean-law-alio-mcp
 /plugin install korean-law-alio@korean-law-alio-marketplace
 ```
+
+The plugin runs `npx -y korean-law-alio-mcp` with `LAW_OC` passed through. No config file edits needed.
 
 ### Method 2: Use directly in Claude.ai web (no install) Easiest
 
