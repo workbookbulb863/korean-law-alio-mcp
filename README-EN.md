@@ -400,11 +400,10 @@ See [`.env.example`](./.env.example) for the full list with examples.
 
 ## Acknowledgements
 
-This fork stands on the shoulders of:
+This project was made possible thanks to:
 
-- **[@chrisryugj](https://github.com/chrisryugj)** — author of [korean-law-mcp](https://github.com/chrisryugj/korean-law-mcp) (the 87 Korean-Law tools) and [kordoc](https://github.com/chrisryugj/kordoc) (HWP/HWPX/PDF unified parser).
-  **Without these two projects, this fork could not have started.** Sincere thanks.
-- **jkg** — provided the core idea of integrating ALIO public-institution internal regulations.
+- chrisryugj — without the [korean-law-mcp](https://github.com/chrisryugj/korean-law-mcp) and [kordoc](https://github.com/chrisryugj/kordoc) projects, this project could not have started. Sincere thanks.
+- jkg — thank you for the idea of integrating ALIO public-institution internal regulations.
 
 ---
 
@@ -414,4 +413,4 @@ This fork stands on the shoulders of:
 
 ---
 
-<sub>Maintained by <a href="https://github.com/scvcoder">scvcoder</a></sub>
+<sub>Made by <a href="https://github.com/scvcoder">scvcoder</a></sub>

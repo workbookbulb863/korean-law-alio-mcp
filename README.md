@@ -400,11 +400,10 @@ korean-law-alio                                             # REPL (대화형)
 
 ## 감사의 말
 
-본 fork 는 다음 분들 덕분에 가능했습니다:
+본 프로젝트는 다음 분들 덕분에 가능했습니다:
 
-- **[@chrisryugj](https://github.com/chrisryugj)** — [korean-law-mcp](https://github.com/chrisryugj/korean-law-mcp) (87개 법제처 도구) + [kordoc](https://github.com/chrisryugj/kordoc) (HWP/HWPX/PDF 통합 파서) 원작자.
-  **이 두 프로젝트가 없었다면 본 fork 도 시작될 수 없었습니다.** 진심으로 감사드립니다.
-- **jkg 님** — ALIO 공공기관 내부규정을 통합해 보자는 핵심 아이디어 제공.
+- chrisryugj 님 — [korean-law-mcp](https://github.com/chrisryugj/korean-law-mcp), [kordoc](https://github.com/chrisryugj/kordoc) 프로젝트를 만드시지 않았으면 이 프로젝트는 시작될 수 없었습니다. 진심으로 감사드립니다.
+- jkg 님 — ALIO 공공기관 내부규정을 통합해 보자는 아이디어를 주셔서 감사합니다.
 
 ---
 
@@ -414,4 +413,4 @@ korean-law-alio                                             # REPL (대화형)
 
 ---
 
-<sub>Maintained by <a href="https://github.com/scvcoder">scvcoder</a></sub>
+<sub>Made by <a href="https://github.com/scvcoder">scvcoder</a></sub>
