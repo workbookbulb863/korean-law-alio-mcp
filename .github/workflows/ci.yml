@@ -28,3 +28,6 @@ jobs:
 
       - name: Build
         run: npm run build
+
+      - name: Test
+        run: node test/index.mjs
