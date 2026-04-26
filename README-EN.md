@@ -20,16 +20,16 @@ This project is forked and derived from [chrisryugj/korean-law-mcp](https://gith
 
 ## v1.0.0 — Bridging Public-Institution Regulations with Korean National Law
 
-On top of the upstream's 87 Korean-Law tools, this fork integrates **23 ALIO public-institution tools + 3 cross-domain bridges** — 110 tools that search, compare, and analyze 1.27 GB of data (Korean Law portal + 35,000 public-institution internal regulations) through natural language.
+On top of the upstream's 87 Korean-Law tools, this fork adds **23 ALIO public-institution tools + 3 tools that link the two areas** — 110 tools that search, compare, and analyze 1.27 GB of data (Korean Law portal + 35,000 public-institution internal regulations) through natural language.
 
 ### What this fork adds
 
 - **23 ALIO tools** — integrates 35,000 internal regulations from 344 Korean public institutions (HWP/HWPX/PDF/XLSX auto-converted via the kordoc unified parser; on-demand disk reads)
-- **3 cross-domain bridges** — automatic linkage between public-institution regulations ↔ upper Korean national laws
-  - `analyze_regulation_delegation` — extracts cited upper laws from a regulation's body and auto-calls the Korean Law portal `search_law`
-  - `find_regulations_by_upper_law` — reverse lookup from a Korean Law portal statute to ALIO regulations that cite it
-  - `parse_alio_article_links` — intra-document citation graph for a single regulation
-- **Natural-language routing** — canonical institution-name auto lookup (synchronous load of `institutions.json`), cross-domain keyword recognition, automatic ALIO/Korean-Law domain branching
+- **3 tools that link public-institution regulations with Korean national laws**
+  - `analyze_regulation_delegation` — auto-extracts upper laws cited in a public-institution regulation's body, then calls the Korean Law portal `search_law` to attach each law's identifier (MST/lawId)
+  - `find_regulations_by_upper_law` — given a Korean Law portal statute, reverse-looks up the public-institution regulations that cite it
+  - `parse_alio_article_links` — analyzes how articles within a single regulation cite/refer to one another (citation graph)
+- **Natural-language routing** — canonical institution-name auto lookup (synchronous load of `institutions.json`), automatic branching across both areas
 - **Clear API auth-failure guidance** — unified across 12 fetch sites; when IP/domain whitelisting blocks the request, the user is pointed to the registration page
 - **Setup wizard** — `npx korean-law-alio-mcp setup` (API key → operating mode → multi-client selection → config auto-registration)
 - **fly.io remote deployment** — `https://korean-law-alio-mcp.fly.dev` (110 tools + ALIO data mirror, best-effort refresh)
@@ -37,35 +37,35 @@ On top of the upstream's 87 Korean-Law tools, this fork integrates **23 ALIO pub
 - **168-case test suite** — build 6 + router 13 + cli 23 + alio 39 + law 87 (`npm test`)
 - **License hygiene** — 4 files clean-room rewritten, zero BSL/Source-Available code
 
-### Example — cross-domain natural-language queries
+### Example — natural-language queries that span both areas
 
 ```
-"한국인터넷진흥원 인사규정 상위법"
+"Show me the upper laws related to ○○ Agency's HR regulations"
 ```
 
-→ One call to `analyze_regulation_delegation` (actual output):
+→ One call to `analyze_regulation_delegation` (actual output for KISA's HR regulation):
 
-- ✓ Auto-extracted 13 external law citations from the body
+- Auto-extracted 13 external law citations from the body
   - 국가공무원법 제33조, 근로기준법 제76조의2, 산업재해보상보험법 제40조,
   - 도로교통법 제44조, 양성평등기본법 제3조, 성폭력범죄의 처벌 등에 관한 특례법 제2조 …
-- ✓ Auto-linked to the Korean Law portal `search_law` — MST/lawId attached for each cited law
-- ✓ Matched 1 internal upper regulation (정부표창규정)
+- Auto-linked to the Korean Law portal `search_law` — MST/lawId attached for each cited law
+- Matched 1 internal upper regulation (정부표창규정)
 
 ```
-"근로기준법 따르는 공공기관 규정"
+"Check whether ○○ Corporation's OOO directive complies with the Labor Standards Act"
 ```
 
 → One call to `find_regulations_by_upper_law`:
 
-- ✓ Reverse lookup of "근로기준법" citations across 35,000 ALIO regulations
-- ✓ Per-institution grouped results with citation context (e.g. 4 hits at (사)남북교류협력지원협회, …)
+- Reverse-looks up "Labor Standards Act" citation locations across 35,000 public-institution regulations
+- Returns matched directives with citation context (which article cites which clause, and how) + per-institution grouping
+- The user can then review whether their own institution's directive properly follows the upper law
 
 **Trace upper laws from public-institution rules in one shot — for compliance review, audits, and policy analysis.**
-For the upstream's rich marketing copy, tool categories, and chain-tool descriptions, see [`README-EN-UPSTREAM.md`](./README-EN-UPSTREAM.md).
 
 ---
 
-## 🚀 Installation & Usage
+## Installation & Usage
 
 ### Step 0: Get an API Key (free, 1 minute)
 
@@ -78,9 +78,9 @@ All methods share one prerequisite — a **Korean Law portal API key (OC)**:
 
 > All examples below use `your-api-key-here` as a placeholder — replace with your issued key. (Same convention as [`.env.example`](./.env.example))
 
-> ⓘ **Recommended: leave the IP/domain registration field empty** when applying — keys without IP registration work from anywhere (local & remote). If you do register IPs/domains, the key only works from those — and remote methods (2 & 3) will require you to add `korean-law-alio-mcp.fly.dev` to your whitelist.
+> **Recommended: leave the IP/domain registration field empty** when applying — keys without IP registration work from anywhere (local & remote). If you do register IPs/domains, the key only works from those — and remote methods (2 & 3) will require you to add `korean-law-alio-mcp.fly.dev` to your whitelist.
 
-### Method 1: Claude Code Plugin — One-line install ⏳ Coming soon
+### Method 1: Claude Code Plugin — One-line install Coming soon
 
 > Marketplace registration is planned for the next release. For now, use Methods 2–5.
 
@@ -90,7 +90,7 @@ When activated:
 /plugin install korean-law-alio@korean-law-alio-marketplace
 ```
 
-### Method 2: Use directly in Claude.ai web (no install) ⚡ Easiest
+### Method 2: Use directly in Claude.ai web (no install) Easiest
 
 Add a custom connector at [claude.ai](https://claude.ai). Requires Pro/Max/Team/Enterprise plan (Free plan limits to 1 connector).
 
@@ -111,8 +111,8 @@ Now ask in natural language:
 ```
 "Show me Article 74 of the Labor Standards Act"        → Korean Law (87 tools)
 "Show ○○ Agency's HR regulations"                      → ALIO (23 tools)
-"What upper laws does ○○ Agency's HR rule cite?"       → cross-domain (ALIO → Korean Law)
-"Public-institution rules following the Labor Std Act" → cross-domain (reverse)
+"What upper laws does ○○ Agency's HR rule cite?"       → regulation → law linkage
+"Public-institution rules following the Labor Std Act" → law → regulation reverse lookup
 "Compare leave-of-absence rules across institutions"   → ALIO peer comparison
 ```
 
@@ -205,13 +205,13 @@ Register with your AI client in stdio mode:
 }
 ```
 
-> ⚠️ **The data mirror is best-effort** — the Releases `tag` is the snapshot date; the `fetchedAt` field inside `manifest.json` gives the exact timestamp. For time-sensitive use, run `npm run alio:sync` to refresh from source. Any harm caused by snapshot drift is the user's responsibility. Full responsibility allocation: [`NOTICE`](./NOTICE).
+> **The data mirror is best-effort** — the Releases `tag` is the snapshot date; the `fetchedAt` field inside `manifest.json` gives the exact timestamp. For time-sensitive use, run `npm run alio:sync` to refresh from source. Any harm caused by snapshot drift is the user's responsibility. Full responsibility allocation: [`NOTICE`](./NOTICE).
 
 ### Method 5: Use from the terminal (CLI)
 
 Developers can search with a single natural-language line.
 
-#### 5-A. Global install ⏳ Coming soon
+#### 5-A. Global install Coming soon
 
 ```bash
 # Activated after npm publish
@@ -226,8 +226,8 @@ korean-law-alio "Civil Act Article 1"
 cd korean-law-alio-mcp
 node build/cli.js "민법 제1조"                              # natural language → auto routing
 node build/cli.js "○○진흥원 인사규정"                       # ALIO natural language
-node build/cli.js "○○진흥원 인사규정 상위법"                # cross-domain (ALIO → Korean Law)
-node build/cli.js "근로기준법 따르는 공공기관 규정"          # cross-domain (reverse)
+node build/cli.js "○○진흥원 인사규정 상위법"                # regulation → law linkage
+node build/cli.js "근로기준법 따르는 공공기관 규정"          # law → regulation reverse lookup
 node build/cli.js search_law --query "관세법"               # direct tool call
 node build/cli.js list                                      # all 110 tools
 node build/cli.js list --category ALIO                      # filter (ALIO/판례/법령검색/etc.)
@@ -252,9 +252,9 @@ Multiple channels available. Higher in the table = higher priority:
 
 ---
 
-## 💬 Examples (natural language)
+## Examples (natural language)
 
-> ⓘ The `○○ Agency` / `○○진흥원` / `C0xxx` placeholders below should be replaced with the actual institution name or apbaId you want to query (e.g. `KISA`, `Korea Electric Power Corp`). Look up canonical names in `data/alio/institutions.json` or via the `search_institution` tool.
+> The `○○ Agency` / `○○진흥원` / `C0xxx` placeholders below should be replaced with the actual institution name or apbaId you want to query (e.g. `KISA`, `Korea Electric Power Corp`). Look up canonical names in `data/alio/institutions.json` or via the `search_institution` tool.
 
 ### Korean-Law tools (87 — upstream)
 
@@ -282,7 +282,7 @@ For richer scenarios, see [`README-EN-UPSTREAM.md`](./README-EN-UPSTREAM.md).
 "ALIO에 어떤 데이터가 있어?"                 → get_alio_statistics
 ```
 
-### Cross-domain bridges (new in this fork — ALIO ↔ Korean Law)
+### Tools linking the two areas (new in this fork)
 
 Public-institution internal regulations inherently delegate from / cite upper national laws. Natural-language queries that bridge the two domains route automatically — without the user knowing tool names:
 
@@ -296,11 +296,11 @@ Public-institution internal regulations inherently delegate from / cite upper na
 "○○진흥원 인사규정 인용 분석"               → parse_alio_article_links (intra-doc citation graph)
 ```
 
-Full reference for 23 ALIO tools + 3 cross-domain bridges: [`docs/API.md`](./docs/API.md) or [`ROADMAP.md`](./ROADMAP.md).
+Full reference for 23 ALIO tools + 3 linkage tools: [`docs/API.md`](./docs/API.md) or [`ROADMAP.md`](./ROADMAP.md).
 
 ---
 
-## 🔧 Environment
+## Environment
 
 | Variable | Required | Purpose |
 |----------|----------|---------|
@@ -313,7 +313,7 @@ See [`.env.example`](./.env.example) for the full list with examples.
 
 ---
 
-## 📚 Documentation
+## Documentation
 
 | Doc | Purpose |
 |------|---------|
@@ -331,7 +331,7 @@ See [`.env.example`](./.env.example) for the full list with examples.
 
 ---
 
-## 🙏 Acknowledgements
+## Acknowledgements
 
 This fork stands on the shoulders of:
 
@@ -344,7 +344,7 @@ Full dependency attributions are in [`NOTICE`](./NOTICE); motivation in [`ROADMA
 
 ---
 
-## 📜 License
+## License
 
 [MIT](./LICENSE) — dual copyright: upstream (Chris, 2025) + this fork (scvcoder, 2026).
 
@@ -353,7 +353,7 @@ All first-party code in this project is licensed under MIT only. No BSL or Sourc
 
 ---
 
-## 📂 Notes — fork info
+## Notes — fork info
 
 This project was **forked on 2026-04-25** from [chrisryugj/korean-law-mcp](https://github.com/chrisryugj/korean-law-mcp).
 
