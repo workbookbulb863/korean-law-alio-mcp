@@ -361,17 +361,16 @@ Per-tool details (names · parameters · examples) are in [`docs/API.md`](./docs
 
 ## Highlights
 
-- **110 integrated tools** — 87 Korean Law portal (upstream) + 23 ALIO public-institution (this fork)
+- **110 integrated tools** — 87 Korean Law portal + 23 ALIO public-institution
 - **Cross-area linkage** — auto-extract upper laws cited by a regulation + reverse lookup ALIO regulations from a national law + intra-document citation graph
 - **Natural-language routing** — canonical institution-name auto-matching (across 344 collected institutions), automatic branching across both areas
 - **MCP + CLI** — same tools usable from Claude Desktop · Cursor · Windsurf and from the terminal
 - **Legal-domain specialization** — abbreviation auto-recognition, article-number conversion, delegation-structure visualization
 - **Annex / form extraction** — HWPX · HWP · PDF · XLSX · DOCX auto-conversion (kordoc engine)
-- **Clear API auth-failure guidance** — guides the user to the registration page when IP/domain whitelisting blocks the request
 - **Remote + local modes** — instant `https://korean-law-alio-mcp.fly.dev` OR own-PC data (`npm run alio:sync`)
-- **Setup wizard** — `npx korean-law-alio-mcp setup` (auto-registers with 5 client types)
+- **Setup wizard** — `npx korean-law-alio-mcp setup`
 - **Verified** — 168 automated test cases (`npm test` — build · router · CLI · ALIO · Korean Law)
-- **License hygiene** — single MIT license, zero BSL/Source-Available code
+- **License** — MIT
 
 ---
 
