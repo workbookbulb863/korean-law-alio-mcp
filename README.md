@@ -14,6 +14,8 @@
 
 본 프로젝트는 [chrisryugj/korean-law-mcp](https://github.com/chrisryugj/korean-law-mcp) 에서 파생되어 만들어 졌습니다.
 
+[English](./README-EN.md)
+
 ![Korean Law ALIO MCP 데모](./demo.png)
 
 ---

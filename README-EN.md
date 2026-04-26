@@ -14,6 +14,8 @@ Searches and compares 1,600 active laws, 10,000 administrative rules, tens of th
 
 This project is derived from [chrisryugj/korean-law-mcp](https://github.com/chrisryugj/korean-law-mcp).
 
+[한국어](./README.md)
+
 ![Korean Law ALIO MCP demo](./demo.png)
 
 ---
