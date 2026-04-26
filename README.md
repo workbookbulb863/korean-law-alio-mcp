@@ -158,44 +158,50 @@
 
 ### 방법 4: 내 컴퓨터에 직접 설치 (오프라인 가능)
 
-인터넷 없이 쓰고 싶거나, 원격 서버를 거치지 않으려면 직접 설치할 수 있습니다.
-
-**사전 준비:** Node.js 버전 20 이상.
-
-**자동 설치 (추천):**
+원격 서버를 안 거치고 자기 PC에서만 동작. ALIO 데이터를 본인이 통제. **사전 준비**: Node.js 버전 20 이상.
 
 ```bash
-npx korean-law-alio-mcp setup
+git clone https://github.com/scvcoder/korean-law-alio-mcp
+cd korean-law-alio-mcp
+npm install && npm run build
+echo "LAW_OC=발급받은-키" > .env
 ```
 
-설치 마법사가 API 키 입력 → AI 클라이언트 선택 (Claude Desktop · Code · Cursor · VS Code · Windsurf) → 설정 파일 자동 등록까지 한 번에 처리합니다.
-
-**수동 설치:**
+ALIO 데이터를 둘 중 하나로 준비:
 
 ```bash
-npm install -g korean-law-alio-mcp
+# (i) 직접 sync — 시간 ↑, 통제 ↑ (6-12시간, 외부 도구 권장)
+#     macOS:   brew install docling tesseract tesseract-lang libreoffice
+#     Linux:   sudo apt install tesseract-ocr tesseract-ocr-kor libreoffice && pip install docling
+#     Windows: Node.js 만 있어도 동작 (특수 케이스만 parseError 남음)
+npm run alio:sync                   # 전체 344개 기관
+npm run alio:sync -- --only C0xxx   # 단일 기관 (apbaId 4자리, 수 분)
+
+# (ii) 운영자 mirror 사용 — 시간 ↓, 외부 도구 불필요 (5-15분, 주기적 갱신)
+# macOS/Linux:
+curl -L -o alio-data.tar.gz \
+  https://github.com/scvcoder/korean-law-alio-mcp/releases/latest/download/alio-data.tar.gz
+tar -xzf alio-data.tar.gz -C data/
+# Windows (PowerShell):
+Invoke-WebRequest -Uri https://github.com/scvcoder/korean-law-alio-mcp/releases/latest/download/alio-data.zip -OutFile alio-data.zip
+Expand-Archive -Path alio-data.zip -DestinationPath data\
 ```
 
-AI 앱 설정 파일에 아래 내용을 추가하세요 (`your-api-key-here` 를 본인 키로 바꾸세요):
+AI 앱 설정 파일에 아래 내용을 등록 (`your-api-key-here` 를 본인 키로 바꾸세요):
 
 ```json
 {
   "mcpServers": {
     "korean-law-alio": {
-      "command": "korean-law-alio-mcp",
-      "env": {
-        "LAW_OC": "your-api-key-here"
-      }
+      "command": "node",
+      "args": ["/절대경로/korean-law-alio-mcp/build/index.js"],
+      "env": { "LAW_OC": "your-api-key-here" }
     }
   }
 }
 ```
 
 앱을 재시작하면 완료!
-
-> **ALIO 데이터 준비 (선택)** — 자기 PC 에서 ALIO 도구도 쓰려면 데이터를 받아둬야 합니다. 법제처 도구만 쓸 거면 불필요.
-> - **운영자 mirror 사용 (5-15분, 추천)**: `curl -L -o alio-data.tar.gz https://github.com/scvcoder/korean-law-alio-mcp/releases/latest/download/alio-data.tar.gz && tar -xzf alio-data.tar.gz -C data/`
-> - **직접 수집 (6-12시간)**: `npm run alio:sync` (외부 도구 권장 — macOS: `brew install docling tesseract tesseract-lang libreoffice`)
 
 ### 방법 5: 터미널(CLI)에서 직접 사용
 
