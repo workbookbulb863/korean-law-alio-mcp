@@ -194,13 +194,49 @@ Add the following to your AI app's config file (replace `your-api-key-here` with
 
 Restart the app — done!
 
-> **ALIO data preparation (optional)** — to use ALIO tools on your own PC, you also need the data. If you only use Korean Law portal tools, this is unnecessary.
-> - **Use the maintainer's mirror (5-15 min, recommended)** — no external tools needed:
->   ```bash
->   curl -L -o alio-data.tar.gz https://github.com/scvcoder/korean-law-alio-mcp/releases/latest/download/alio-data.tar.gz
->   tar -xzf alio-data.tar.gz -C data/
->   ```
-> - **Direct sync (6-12 h)** — `npm run alio:sync` (external tools recommended — macOS: `brew install docling tesseract tesseract-lang libreoffice`)
+**ALIO data preparation (required)** — to use ALIO tools on your own PC, you must have the data. Pick one of the two methods below.
+
+#### (Option 1) Use the maintainer's mirror (5-15 min, recommended)
+
+Download a pre-collected snapshot. No external tools required. ~200MB compressed → ~1.27GB after extraction.
+
+**Windows (PowerShell):**
+```powershell
+Invoke-WebRequest -Uri https://github.com/scvcoder/korean-law-alio-mcp/releases/latest/download/alio-data.zip -OutFile alio-data.zip
+Expand-Archive -Path alio-data.zip -DestinationPath data\
+```
+
+**Mac, Linux:**
+```bash
+curl -L -o alio-data.tar.gz https://github.com/scvcoder/korean-law-alio-mcp/releases/latest/download/alio-data.tar.gz
+tar -xzf alio-data.tar.gz -C data/
+```
+
+#### (Option 2) Direct sync (6-12 hours)
+
+Sync 35,000 regulations from 344 public institutions directly from ALIO. You stay on the latest data. External tools recommended for HWP/HWPX/PDF/XLSX conversion (without them, only some edge cases get `parseError` and the rest still works):
+
+**macOS:**
+```bash
+brew install docling tesseract tesseract-lang libreoffice
+```
+
+**Linux (Ubuntu/Debian):**
+```bash
+sudo apt install tesseract-ocr tesseract-ocr-kor libreoffice
+pip install docling
+```
+
+**Windows:** Node.js alone is enough for sync to run. Without external tools, scanned PDFs / HWP 3.0 edge cases will be marked `parseError`.
+
+Sync commands:
+```bash
+npm run alio:sync                   # All 344 institutions (6-12 hours)
+npm run alio:sync -- --only C0xxx   # Single institution (apbaId 4-digit, minutes)
+npm run alio:sync -- --resume       # Retry failed institutions only
+```
+
+Synced data lives in `data/alio/` (about 1.27 GB). Per-institution directories (`C0xxx`) + manifest.json + regulation markdowns.
 
 ### Method 5: Use from the terminal (CLI)
 
