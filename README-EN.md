@@ -386,7 +386,6 @@ See [`.env.example`](./.env.example) for the full list with examples.
 | [`README.md`](./README.md) | Korean README |
 | [`docs/API.md`](./docs/API.md) | 110-tool reference |
 | [`CLAUDE.md`](./CLAUDE.md) | Code guide for AI assistants and contributors |
-| [`CONTRIBUTING.md`](./CONTRIBUTING.md) | Contribution guide — PR checklist, license compatibility |
 | [`ROADMAP.md`](./ROADMAP.md) | Motivation, plans, acknowledgements |
 | [`CHANGELOG.md`](./CHANGELOG.md) | Change log |
 | [`TEST-REPORT.md`](./TEST-REPORT.md) | Comprehensive test results (168 cases ALL PASS) |
