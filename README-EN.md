@@ -380,19 +380,30 @@ See [`.env.example`](./.env.example) for the full list with examples.
 
 ## Documentation
 
+### This project's docs
+
 | Doc | Purpose |
 |------|---------|
-| [`README-EN-UPSTREAM.md`](./README-EN-UPSTREAM.md) | 📜 Upstream original README (English) — rich tool categories / chains |
-| [`README.md`](./README.md) | Korean version of this fork |
-| [`README-UPSTREAM.md`](./README-UPSTREAM.md) | 📜 Upstream original README (Korean) |
-| [`CLAUDE.md`](./CLAUDE.md) | Code guide for AI assistants and contributors |
-| [`CONTRIBUTING.md`](./CONTRIBUTING.md) | Contribution guide — PR checklist, license compatibility policy |
-| [`ROADMAP.md`](./ROADMAP.md) | This fork's motivation, future plans, and acknowledgements |
-| [`CHANGELOG.md`](./CHANGELOG.md) | Changes since fork |
+| [`README-EN.md`](./README-EN.md) | English README (this document) |
+| [`README.md`](./README.md) | Korean README |
 | [`docs/API.md`](./docs/API.md) | 110-tool reference |
+| [`CLAUDE.md`](./CLAUDE.md) | Code guide for AI assistants and contributors |
+| [`CONTRIBUTING.md`](./CONTRIBUTING.md) | Contribution guide — PR checklist, license compatibility |
+| [`ROADMAP.md`](./ROADMAP.md) | Motivation, plans, acknowledgements |
+| [`CHANGELOG.md`](./CHANGELOG.md) | Change log |
 | [`TEST-REPORT.md`](./TEST-REPORT.md) | Comprehensive test results (168 cases ALL PASS) |
-| [`LICENSE`](./LICENSE) | MIT (dual copyright: upstream + this fork) |
+| [`LICENSE`](./LICENSE) | MIT |
 | [`NOTICE`](./NOTICE) | All dependency attributions |
+
+### Upstream-preserved docs
+
+| Doc | Purpose |
+|------|---------|
+| [`README-UPSTREAM.md`](./README-UPSTREAM.md) | Upstream original README (Korean) |
+| [`README-EN-UPSTREAM.md`](./README-EN-UPSTREAM.md) | Upstream original README (English) |
+| [`CLAUDE-UPSTREAM.md`](./CLAUDE-UPSTREAM.md) | Upstream original code guide |
+| [`ROADMAP-UPSTREAM.md`](./ROADMAP-UPSTREAM.md) | Upstream original ROADMAP |
+| [`CHANGELOG-UPSTREAM.md`](./CHANGELOG-UPSTREAM.md) | Upstream original changelog |
 
 ---
 

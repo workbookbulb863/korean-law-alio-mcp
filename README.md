@@ -380,19 +380,30 @@ korean-law-alio                                             # REPL (대화형)
 
 ## 문서
 
+### 본 프로젝트 문서
+
 | 문서 | 설명 |
 |------|------|
-| [`README-UPSTREAM.md`](./README-UPSTREAM.md) | 📜 원작자 README 원문 (한글) — 도구 카테고리/체인 등 풍부한 안내 |
-| [`README-EN.md`](./README-EN.md) | 본 fork 의 영문판 |
-| [`README-EN-UPSTREAM.md`](./README-EN-UPSTREAM.md) | 📜 원작자 README 원문 (영문) |
+| [`README.md`](./README.md) | 한글 README (현재 문서) |
+| [`README-EN.md`](./README-EN.md) | 영문 README |
+| [`docs/API.md`](./docs/API.md) | 110개 도구 레퍼런스 |
 | [`CLAUDE.md`](./CLAUDE.md) | 코드 가이드 (AI 어시스턴트 + 기여자용) |
 | [`CONTRIBUTING.md`](./CONTRIBUTING.md) | 기여 가이드 — PR 체크리스트, 라이선스 호환성 정책 |
-| [`ROADMAP.md`](./ROADMAP.md) | fork 의 변경 동기 + 향후 계획 + 감사의 말 |
-| [`CHANGELOG.md`](./CHANGELOG.md) | fork 이후 변경 이력 |
-| [`docs/API.md`](./docs/API.md) | 110개 도구 레퍼런스 |
-| [`TEST-REPORT.md`](./TEST-REPORT.md) | 종합 테스트 결과 (69 cases ALL PASS) |
-| [`LICENSE`](./LICENSE) | MIT (원작자 + scvcoder 듀얼 copyright) |
+| [`ROADMAP.md`](./ROADMAP.md) | 변경 동기 + 향후 계획 + 감사의 말 |
+| [`CHANGELOG.md`](./CHANGELOG.md) | 변경 이력 |
+| [`TEST-REPORT.md`](./TEST-REPORT.md) | 종합 테스트 결과 (168 cases ALL PASS) |
+| [`LICENSE`](./LICENSE) | MIT |
 | [`NOTICE`](./NOTICE) | 모든 의존성 attribution |
+
+### 원작자 보존 문서
+
+| 문서 | 설명 |
+|------|------|
+| [`README-UPSTREAM.md`](./README-UPSTREAM.md) | 원작자 README 원문 (한글) |
+| [`README-EN-UPSTREAM.md`](./README-EN-UPSTREAM.md) | 원작자 README 원문 (영문) |
+| [`CLAUDE-UPSTREAM.md`](./CLAUDE-UPSTREAM.md) | 원작자 코드 가이드 원문 |
+| [`ROADMAP-UPSTREAM.md`](./ROADMAP-UPSTREAM.md) | 원작자 ROADMAP 원문 |
+| [`CHANGELOG-UPSTREAM.md`](./CHANGELOG-UPSTREAM.md) | 원작자 변경 이력 원문 |
 
 ---
 
