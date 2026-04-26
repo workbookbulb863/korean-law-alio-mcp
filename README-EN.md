@@ -18,6 +18,16 @@ This project is forked and derived from [chrisryugj/korean-law-mcp](https://gith
 
 ---
 
+## Why this was built
+
+Thanks to [korean-law-mcp](https://github.com/chrisryugj/korean-law-mcp), accessing Korea's national law has become much easier and supports public-sector work daily. Sincere thanks again to [chrisryugj](https://github.com/chrisryugj).
+
+We believed that combining national laws with public-institution internal regulations would multiply the value. This fork was therefore developed using regulation data from [ALIO](https://alio.go.kr/).
+
+May this help those who find legal access difficult, and the public-institution staff across the country who struggle with internal regulation management.
+
+---
+
 ## v1.0.0 — Bridging Public-Institution Regulations with Korean National Law
 
 On top of the upstream's 87 Korean-Law tools, this fork adds **23 ALIO public-institution tools + 3 tools that link the two areas** — 110 tools that search, compare, and analyze 1.27 GB of data (Korean Law portal + 35,000 public-institution internal regulations) through natural language.
