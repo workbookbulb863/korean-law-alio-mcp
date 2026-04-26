@@ -158,7 +158,7 @@ If you already have other MCP servers configured, just add the `"korean-law-alio
 
 ### Method 4: Install on Your Own Machine (offline · security-sensitive · data control)
 
-Runs on your own PC without going through any remote server. You control the ALIO data. **Prereq**: Node.js ≥ 20.
+Runs on your own PC without going through any remote server. You control the ALIO data. **Prereq**: Node.js version 20 or higher.
 
 #### 4-A. Setup wizard
 
