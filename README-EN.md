@@ -275,18 +275,16 @@ korean-law-alio                                             # REPL (interactive)
 
 > ALIO tools work **straight from the user's natural-language question** — no per-deployment configuration of comparison targets. The user can say "compare A·B·C", "pick 5 random", or just give a topic, and the LLM calls the right tool.
 
-### API Key Channels — Summary
+### API Key — How to pass it
 
-Multiple channels available. Higher in the table = higher priority:
+You can pass the API key through any of the methods below. Earlier in the table = higher priority:
 
-| Channel | Usage | Recommended for |
-|---------|-------|-----------------|
-| URL query | `?oc=your-key` | Methods 2 & 3 (web/desktop URL) — easiest |
-| HTTP header | `apikey: your-key` (also `x-api-key`, `Authorization: Bearer your-key`) | Programmatic integration |
-| Environment | `LAW_OC=your-key` | Methods 4 & 5 (local) |
-| Tool argument | `apiKey: "your-key"` | Per-call key override |
-
-> **For users with IP/domain registration enabled on their key**: to use Methods 2 & 3 (remote), add `korean-law-alio-mcp.fly.dev` to your whitelist at [open.law.go.kr/LSO/openApi/userMypage.do](https://open.law.go.kr/LSO/openApi/userMypage.do). Users without IP/domain registration (default) need no extra setup — works immediately.
+| Method | Usage | Use case |
+|--------|-------|----------|
+| In the URL | append `?oc=your-key` | Easiest for web clients |
+| HTTP header | `apikey: your-key` | When integrating programmatically |
+| Environment variable | `LAW_OC=your-key` | Local install (Methods 3, 4) |
+| Tool parameter | `apiKey: "your-key"` | When a single request needs a different key |
 
 ---
 
