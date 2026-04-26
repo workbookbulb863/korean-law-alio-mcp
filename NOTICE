@@ -299,8 +299,8 @@ The following are new in this fork (also licensed under MIT):
                           or on the server's persistent volume under remote
                           MCP mode. See "Data sources" section above for
                           the full responsibility allocation.
-  - test/                 ESM test suite for build / router / ALIO / law tools
-                          (141 cases total); existing test/*.cjs preserved
+  - test/                 ESM test suite for build / router / CLI / ALIO / law
+                          tools (168 cases total); existing test/*.cjs preserved
 
 Dependency changes:
   - kordoc upgraded from 1.6.x to 2.5.2 (major bump, breaking changes accepted)

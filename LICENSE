@@ -20,11 +20,3 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-
---------------------------------------------------------------------------------
-
-For attribution of bundled npm dependencies, external tools (LibreOffice /
-docling / tesseract), and data sources (ALIO, 법제처 OpenAPI) including their
-respective licenses, the legal basis for data fetching, and the responsibility
-allocation between local-MCP and remote-MCP operational modes, see the NOTICE
-file.
