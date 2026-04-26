@@ -405,28 +405,13 @@ korean-law-alio                                             # REPL (대화형)
 - **[@chrisryugj](https://github.com/chrisryugj)** — [korean-law-mcp](https://github.com/chrisryugj/korean-law-mcp) (87개 법제처 도구) + [kordoc](https://github.com/chrisryugj/kordoc) (HWP/HWPX/PDF 통합 파서) 원작자.
   **이 두 프로젝트가 없었다면 본 fork 도 시작될 수 없었습니다.** 진심으로 감사드립니다.
 - **jkg 님** — ALIO 공공기관 내부규정을 통합해 보자는 핵심 아이디어 제공.
-- **Claude (Anthropic)** — 개발 과정 전반의 코드 작성·리뷰·문서화 보조.
-
-전체 의존성 attribution 은 [`NOTICE`](./NOTICE), 변경 동기는 [`ROADMAP.md`](./ROADMAP.md) 참고.
 
 ---
 
 ## 라이선스
 
-[MIT](./LICENSE) — 원작자(Chris, 2025) + 본 fork(scvcoder, 2026) 듀얼 copyright.
-
-본 프로젝트의 모든 자체 코드는 MIT 단일 라이선스. 외부 BSL/Source-Available 코드를 포함하지 않습니다.
-([라이선스 위생 작업](./CHANGELOG.md#security--license-hygiene) 참고)
+[MIT](./LICENSE)
 
 ---
 
-## 참고사항 — fork 정보
-
-본 프로젝트는 **2026-04-25** 일자로 [chrisryugj/korean-law-mcp](https://github.com/chrisryugj/korean-law-mcp) 에서 fork 된 파생 작업입니다.
-
-- 원작자 README 원문은 [`README-UPSTREAM.md`](./README-UPSTREAM.md) 에 무수정 보존
-- English: [`README-EN.md`](./README-EN.md) · 원작자 영문 README: [`README-EN-UPSTREAM.md`](./README-EN-UPSTREAM.md)
-
----
-
-<sub>Maintained by <a href="https://github.com/scvcoder">scvcoder</a> · Forked from <a href="https://github.com/chrisryugj/korean-law-mcp">chrisryugj/korean-law-mcp</a> on 2026-04-25</sub>
+<sub>Maintained by <a href="https://github.com/scvcoder">scvcoder</a></sub>

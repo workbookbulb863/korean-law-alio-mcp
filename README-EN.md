@@ -405,28 +405,13 @@ This fork stands on the shoulders of:
 - **[@chrisryugj](https://github.com/chrisryugj)** — author of [korean-law-mcp](https://github.com/chrisryugj/korean-law-mcp) (the 87 Korean-Law tools) and [kordoc](https://github.com/chrisryugj/kordoc) (HWP/HWPX/PDF unified parser).
   **Without these two projects, this fork could not have started.** Sincere thanks.
 - **jkg** — provided the core idea of integrating ALIO public-institution internal regulations.
-- **Claude (Anthropic)** — assisted with code, review, and documentation throughout.
-
-Full dependency attributions are in [`NOTICE`](./NOTICE); motivation in [`ROADMAP.md`](./ROADMAP.md).
 
 ---
 
 ## License
 
-[MIT](./LICENSE) — dual copyright: upstream (Chris, 2025) + this fork (scvcoder, 2026).
-
-All first-party code in this project is licensed under MIT only. No BSL or Source-Available code is bundled.
-([Details on license-hygiene work](./CHANGELOG.md#security--license-hygiene))
+[MIT](./LICENSE)
 
 ---
 
-## Notes — fork info
-
-This project was **forked on 2026-04-25** from [chrisryugj/korean-law-mcp](https://github.com/chrisryugj/korean-law-mcp).
-
-- The original README is preserved as-is in [`README-EN-UPSTREAM.md`](./README-EN-UPSTREAM.md)
-- Korean: [`README.md`](./README.md) · Original Korean README: [`README-UPSTREAM.md`](./README-UPSTREAM.md)
-
----
-
-<sub>Maintained by <a href="https://github.com/scvcoder">scvcoder</a> · Forked from <a href="https://github.com/chrisryugj/korean-law-mcp">chrisryugj/korean-law-mcp</a> on 2026-04-25</sub>
+<sub>Maintained by <a href="https://github.com/scvcoder">scvcoder</a></sub>
