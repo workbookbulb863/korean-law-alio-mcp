@@ -371,10 +371,7 @@ Per-tool details (names · parameters · examples) are in [`docs/API.md`](./docs
 
 | Variable | Required | Purpose |
 |----------|----------|---------|
-| `LAW_OC` | ✅ | Korean Law portal API ID |
-| `ALIO_DATA_DIR` | ❌ | Override `data/alio/` path |
-| `ALIO_INSTITUTION_ALIASES` | ❌ | NL routing aliases (JSON, e.g. `{"MYORG":"My Org"}`) |
-| `DOCLING_*` | ❌ | OCR fallback engine/lang/device |
+| `LAW_OC` | ✅ | Korean Law portal Open API key |
 
 See [`.env.example`](./.env.example) for the full list with examples.
 

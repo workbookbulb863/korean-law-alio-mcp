@@ -371,10 +371,7 @@ korean-law-alio                                             # REPL (대화형)
 
 | 변수 | 필수 | 용도 |
 |------|------|------|
-| `LAW_OC` | ✅ | 법제처 OpenAPI 신청자 ID |
-| `ALIO_DATA_DIR` | ❌ | `data/alio/` 경로 override |
-| `ALIO_INSTITUTION_ALIASES` | ❌ | 자연어 라우팅용 약어 매핑 (JSON, 예: `{"MYORG":"우리기관"}`) |
-| `DOCLING_*` | ❌ | OCR fallback 엔진/언어/디바이스 |
+| `LAW_OC` | ✅ | 법제처 OpenAPI 신청자의 오픈 API 인증키 |
 
 전체 변수 + 예시는 [`.env.example`](./.env.example) 참고.
 
