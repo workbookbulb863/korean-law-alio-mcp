@@ -26,9 +26,9 @@ On top of the upstream's 87 Korean-Law tools, this fork adds **23 ALIO public-in
 
 - **23 ALIO tools** — integrates 35,000 internal regulations from 344 Korean public institutions (HWP/HWPX/PDF/XLSX auto-converted via the kordoc unified parser; on-demand disk reads)
 - **3 tools that link public-institution regulations with Korean national laws**
-  - `analyze_regulation_delegation` — auto-extracts upper laws cited in a public-institution regulation's body, then calls the Korean Law portal `search_law` to attach each law's identifier (MST/lawId)
-  - `find_regulations_by_upper_law` — given a Korean Law portal statute, reverse-looks up the public-institution regulations that cite it
-  - `parse_alio_article_links` — analyzes how articles within a single regulation cite/refer to one another (citation graph)
+  - Auto-extracts upper laws cited in a public-institution regulation's body and looks up each law's identifier at the Korean Law portal
+  - Given a Korean Law portal statute, reverse-looks up the public-institution regulations across the country that cite it
+  - Analyzes how articles within a single regulation cite/refer to one another
 - **Natural-language routing** — canonical institution-name auto lookup (synchronous load of `institutions.json`), automatic branching across both areas
 - **Clear API auth-failure guidance** — unified across 12 fetch sites; when IP/domain whitelisting blocks the request, the user is pointed to the registration page
 - **Setup wizard** — `npx korean-law-alio-mcp setup` (API key → operating mode → multi-client selection → config auto-registration)
@@ -43,23 +43,29 @@ On top of the upstream's 87 Korean-Law tools, this fork adds **23 ALIO public-in
 "Show me the upper laws related to ○○ Agency's HR regulations"
 ```
 
-→ One call to `analyze_regulation_delegation` (actual output for KISA's HR regulation):
+→ Given the natural-language query, the AI automatically:
 
-- Auto-extracted 13 external law citations from the body
-  - 국가공무원법 제33조, 근로기준법 제76조의2, 산업재해보상보험법 제40조,
-  - 도로교통법 제44조, 양성평등기본법 제3조, 성폭력범죄의 처벌 등에 관한 특례법 제2조 …
-- Auto-linked to the Korean Law portal `search_law` — MST/lawId attached for each cited law
-- Matched 1 internal upper regulation (정부표창규정)
+- Analyzes the institution's HR regulation body and extracts cited upper laws
+- Looks up each cited law's identifier at the Korean Law portal and attaches it
+- Also matches internal upper regulations from the same institution
+
+Example outcome:
+
+> "Found about 10+ upper-law citations in the HR regulation body (e.g., general HR/labor laws, occupational safety laws, gender-equality laws, etc.). Identifiers are attached for follow-up lookups. An internal upper regulation from the same institution was also matched."
 
 ```
 "Check whether ○○ Corporation's OOO directive complies with the Labor Standards Act"
 ```
 
-→ One call to `find_regulations_by_upper_law`:
+→ Given the natural-language query, the AI automatically:
 
-- Reverse-looks up "Labor Standards Act" citation locations across 35,000 public-institution regulations
-- Returns matched directives with citation context (which article cites which clause, and how) + per-institution grouping
-- The user can then review whether their own institution's directive properly follows the upper law
+- Reverse-searches citations of the given law (e.g., the Labor Standards Act) across 35,000 public-institution regulations
+- Compiles citation context (which article cites which clause, and how) for each matched directive
+- Groups results per institution
+
+Example outcome:
+
+> "Citation cases of the law were detected across multiple institutions' directives. By comparing how each directive cites which clauses, the user can assess their own institution's compliance level."
 
 **Trace upper laws from public-institution rules in one shot — for compliance review, audits, and policy analysis.**
 
