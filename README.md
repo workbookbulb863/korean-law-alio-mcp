@@ -361,17 +361,16 @@ korean-law-alio                                             # REPL (대화형)
 
 ## 주요 특징
 
-- **110개 도구 통합** — 법제처 87 (원작 자산) + ALIO 공공기관 23 (fork 신규)
+- **110개 도구 통합** — 법제처 87 + ALIO 공공기관 23
 - **두 영역 연계** — 공공기관 규정의 인용 법령 자동 추출 + 상위법 기반 ALIO 역검색 + 조문간 인용 그래프
 - **자연어 라우팅** — 정식 기관명 자동 매칭 (수집된 344개 기관), 두 영역 자동 분기
 - **MCP + CLI** — Claude Desktop·Cursor·Windsurf 에서도, 터미널에서도 같은 도구 사용
 - **법률 도메인 특화** — 약칭 자동 인식 (`화관법` → `화학물질관리법`), 조문번호 변환 (`제38조` ↔ `003800`), 위임 구조 시각화
 - **별표·별지서식 본문 추출** — HWPX·HWP·PDF·XLSX·DOCX 자동 변환 (kordoc 엔진)
-- **API 키 인증실패 명확한 안내** — IP/도메인 화이트리스트 차단 시 등록 페이지 안내
 - **원격 + 로컬 모드** — `https://korean-law-alio-mcp.fly.dev` 즉시 사용 OR 자기 PC 에 데이터 보관 (`npm run alio:sync`)
-- **자동 설치 마법사** — `npx korean-law-alio-mcp setup` (5종 클라이언트 자동 등록)
+- **자동 설치 마법사** — `npx korean-law-alio-mcp setup`
 - **검증** — 168 cases 자동 테스트 (`npm test` — 빌드·라우터·CLI·ALIO·법제처)
-- **라이선스 위생** — MIT 단일 라이선스, BSL/Source-Available 코드 0
+- **라이선스** — MIT
 
 ---
 
